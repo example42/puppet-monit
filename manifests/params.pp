@@ -45,11 +45,11 @@ class monit::params {
   }
 
   $config_file = $::operatingsystem ? {
-    default => '/etc/monit/monit.conf',
+    default => '/etc/monit/monitrc',
   }
 
   $config_file_mode = $::operatingsystem ? {
-    default => '0644',
+    default => '0600',
   }
 
   $config_file_owner = $::operatingsystem ? {
@@ -81,7 +81,7 @@ class monit::params {
     default => '/var/log/monit/monit.log',
   }
 
-  $port = '42'
+  $port = ''
   $protocol = 'tcp'
 
   # General Settings
