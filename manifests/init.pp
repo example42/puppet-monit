@@ -5,6 +5,9 @@
 #
 # == Parameters
 #
+# [*plugins_dir*]
+#   Directory contaning single configuration snippets
+#
 # Standard class parameters
 # Define the general class behaviour and customizations
 #
@@ -200,6 +203,7 @@
 # See README for usage patterns.
 #
 class monit (
+  $plugins_dir         = params_lookup( 'plugins_dir' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
   $source_dir          = params_lookup( 'source_dir' ),

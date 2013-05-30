@@ -1,0 +1,5 @@
+## This file is managed by Puppet
+
+check host <%= @name %> with address <%= @real_fqdn %>
+    if failed url <%= @real_url %> <% if (@content != '') %> and content == '<%= @content %>' <% end %>
+    then <%= @@failaction %>

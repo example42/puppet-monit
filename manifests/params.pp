@@ -14,6 +14,10 @@
 #
 class monit::params {
 
+  $plugins_dir = $::operatingsystem ? {
+    default => '/etc/monit/conf.d',
+  }
+
   ### Application related parameters
 
   $package = $::operatingsystem ? {
