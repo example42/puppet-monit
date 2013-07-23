@@ -15,7 +15,8 @@
 class monit::params {
 
   $plugins_dir = $::operatingsystem ? {
-    default => '/etc/monit/conf.d',
+    /(?i:Debian|Ubuntu|Mint)/ => '/etc/monit/conf.d',
+    default                   => '/etc/monit.d',
   }
 
   ### Application related parameters
