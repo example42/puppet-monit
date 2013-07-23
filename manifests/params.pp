@@ -69,6 +69,8 @@ class monit::params {
     default                   => '/etc/sysconfig/monit',
   }
 
+  $config_file_init_template = ''
+
   $pid_file = $::operatingsystem ? {
     default => '/var/run/monit.pid',
   }

@@ -18,6 +18,33 @@ describe 'monit' do
     it { should contain_package('monit').with_ensure('1.0.42') }
   end
 
+  describe 'Test installation of Debian init configuration file' do
+    let(:facts) do
+      { 
+        :ipaddress => '10.42.42.42',
+        :operatinsystem => 'Debian',
+      }
+    end
+    let(:params) do
+      {
+        :config_file_init_template => 'monit/config_init-debian.erb',
+      }
+    end
+    let(:expected) do
+"# This file is managed by Puppet. DO NOT EDIT.
+
+# Defaults for monit initscript.  This file is sourced by
+# /bin/sh from /etc/init.d/monit.
+
+# Set START to yes to start the monit
+START=yes
+
+"
+    end
+    it { should contain_file('monit.init').with_ensure('present') }
+    it { should contain_file('monit.init').with_content(expected) }
+  end
+
   describe 'Test standard installation with monitoring and firewalling' do
     let(:params) { {:monitor => true , :firewall => true, :port => '42', :protocol => 'tcp' } }
     it { should contain_package('monit').with_ensure('present') }
@@ -49,7 +76,40 @@ describe 'monit' do
   end
 
   describe 'Test decommissioning - disableboot' do
-    let(:params) { {:disableboot => true, :monitor => true , :firewall => true, :port => '42', :protocol => 'tcp'} }
+    let(:params) do
+      { 
+        :disableboot => true,
+        :monitor => true,
+        :firewall => true,
+        :port => '42',
+        :protocol => 'tcp'
+      }
+    end
+    it { should contain_package('monit').with_ensure('present') }
+    it { should_not contain_service('monit').with_ensure('present') }
+    it { should_not contain_service('monit').with_ensure('absent') }
+    it 'should not enable at boot Service[monit]' do should contain_service('monit').with_enable('false') end
+    it { should contain_file('monit.conf').with_ensure('present') }
+    it { should contain_monitor__process('monit_process').with_enable('false') }
+    it { should contain_firewall('monit_tcp_42').with_enable('true') }
+  end
+
+  describe 'Test decommissioning - disableboot - Debian' do
+    let(:facts) do
+      { 
+        :ipaddress => '10.42.42.42',
+        :operatinsystem => 'Debian',
+      }
+    end
+    let(:params) do
+      { 
+        :disableboot => true,
+        :monitor => true,
+        :firewall => true,
+        :port => '42',
+        :protocol => 'tcp'
+      }
+    end
     it { should contain_package('monit').with_ensure('present') }
     it { should_not contain_service('monit').with_ensure('present') }
     it { should_not contain_service('monit').with_ensure('absent') }

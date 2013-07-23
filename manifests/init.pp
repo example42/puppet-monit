@@ -175,6 +175,16 @@
 #
 # [*config_file_init*]
 #   Path of configuration file sourced by init script
+#   Currently useful only in Debian (and derivatives?)
+#
+# [*config_file_init_template*]
+#   Path of template file for the configuration file sourced by init script
+#   Currently useful only in Debian (and derivatives?)
+#
+# [*init_opts*]
+#   If handling the init config file in Debian (see above), you can pass extra
+#   options to the executable
+#   Currently useful only in Debian (and derivatives?)
 #
 # [*pid_file*]
 #   Path of pid file. Used by monitor
@@ -203,48 +213,50 @@
 # See README for usage patterns.
 #
 class monit (
-  $plugins_dir         = params_lookup( 'plugins_dir' ),
-  $my_class            = params_lookup( 'my_class' ),
-  $source              = params_lookup( 'source' ),
-  $source_dir          = params_lookup( 'source_dir' ),
-  $source_dir_purge    = params_lookup( 'source_dir_purge' ),
-  $template            = params_lookup( 'template' ),
-  $service_autorestart = params_lookup( 'service_autorestart' , 'global' ),
-  $options             = params_lookup( 'options' ),
-  $version             = params_lookup( 'version' ),
-  $absent              = params_lookup( 'absent' ),
-  $disable             = params_lookup( 'disable' ),
-  $disableboot         = params_lookup( 'disableboot' ),
-  $monitor             = params_lookup( 'monitor' , 'global' ),
-  $monitor_tool        = params_lookup( 'monitor_tool' , 'global' ),
-  $monitor_target      = params_lookup( 'monitor_target' , 'global' ),
-  $puppi               = params_lookup( 'puppi' , 'global' ),
-  $puppi_helper        = params_lookup( 'puppi_helper' , 'global' ),
-  $firewall            = params_lookup( 'firewall' , 'global' ),
-  $firewall_tool       = params_lookup( 'firewall_tool' , 'global' ),
-  $firewall_src        = params_lookup( 'firewall_src' , 'global' ),
-  $firewall_dst        = params_lookup( 'firewall_dst' , 'global' ),
-  $debug               = params_lookup( 'debug' , 'global' ),
-  $audit_only          = params_lookup( 'audit_only' , 'global' ),
-  $noops               = params_lookup( 'noops' ),
-  $package             = params_lookup( 'package' ),
-  $service             = params_lookup( 'service' ),
-  $service_status      = params_lookup( 'service_status' ),
-  $process             = params_lookup( 'process' ),
-  $process_args        = params_lookup( 'process_args' ),
-  $process_user        = params_lookup( 'process_user' ),
-  $config_dir          = params_lookup( 'config_dir' ),
-  $config_file         = params_lookup( 'config_file' ),
-  $config_file_mode    = params_lookup( 'config_file_mode' ),
-  $config_file_owner   = params_lookup( 'config_file_owner' ),
-  $config_file_group   = params_lookup( 'config_file_group' ),
-  $config_file_init    = params_lookup( 'config_file_init' ),
-  $pid_file            = params_lookup( 'pid_file' ),
-  $data_dir            = params_lookup( 'data_dir' ),
-  $log_dir             = params_lookup( 'log_dir' ),
-  $log_file            = params_lookup( 'log_file' ),
-  $port                = params_lookup( 'port' ),
-  $protocol            = params_lookup( 'protocol' )
+  $plugins_dir               = params_lookup( 'plugins_dir' ),
+  $my_class                  = params_lookup( 'my_class' ),
+  $source                    = params_lookup( 'source' ),
+  $source_dir                = params_lookup( 'source_dir' ),
+  $source_dir_purge          = params_lookup( 'source_dir_purge' ),
+  $template                  = params_lookup( 'template' ),
+  $service_autorestart       = params_lookup( 'service_autorestart' , 'global' ),
+  $options                   = params_lookup( 'options' ),
+  $version                   = params_lookup( 'version' ),
+  $absent                    = params_lookup( 'absent' ),
+  $disable                   = params_lookup( 'disable' ),
+  $disableboot               = params_lookup( 'disableboot' ),
+  $monitor                   = params_lookup( 'monitor' , 'global' ),
+  $monitor_tool              = params_lookup( 'monitor_tool' , 'global' ),
+  $monitor_target            = params_lookup( 'monitor_target' , 'global' ),
+  $puppi                     = params_lookup( 'puppi' , 'global' ),
+  $puppi_helper              = params_lookup( 'puppi_helper' , 'global' ),
+  $firewall                  = params_lookup( 'firewall' , 'global' ),
+  $firewall_tool             = params_lookup( 'firewall_tool' , 'global' ),
+  $firewall_src              = params_lookup( 'firewall_src' , 'global' ),
+  $firewall_dst              = params_lookup( 'firewall_dst' , 'global' ),
+  $debug                     = params_lookup( 'debug' , 'global' ),
+  $audit_only                = params_lookup( 'audit_only' , 'global' ),
+  $noops                     = params_lookup( 'noops' ),
+  $package                   = params_lookup( 'package' ),
+  $service                   = params_lookup( 'service' ),
+  $service_status            = params_lookup( 'service_status' ),
+  $process                   = params_lookup( 'process' ),
+  $process_args              = params_lookup( 'process_args' ),
+  $process_user              = params_lookup( 'process_user' ),
+  $config_dir                = params_lookup( 'config_dir' ),
+  $config_file               = params_lookup( 'config_file' ),
+  $config_file_mode          = params_lookup( 'config_file_mode' ),
+  $config_file_owner         = params_lookup( 'config_file_owner' ),
+  $config_file_group         = params_lookup( 'config_file_group' ),
+  $config_file_init          = params_lookup( 'config_file_init' ),
+  $config_file_init_template = params_lookup( 'config_file_init_template' ),
+  $init_opts                 = params_lookup( 'init_opts' ),
+  $pid_file                  = params_lookup( 'pid_file' ),
+  $data_dir                  = params_lookup( 'data_dir' ),
+  $log_dir                   = params_lookup( 'log_dir' ),
+  $log_file                  = params_lookup( 'log_file' ),
+  $port                      = params_lookup( 'port' ),
+  $protocol                  = params_lookup( 'protocol' )
   ) inherits monit::params {
 
   $bool_source_dir_purge=any2bool($source_dir_purge)
@@ -309,6 +321,11 @@ class monit (
     $manage_firewall = true
   }
 
+  $bool_start_at_boot = $monit::bool_disableboot ? {
+    true    => 'no',
+    default => 'yes',
+  }
+
   $manage_audit = $monit::bool_audit_only ? {
     true  => 'all',
     false => undef,
@@ -327,6 +344,11 @@ class monit (
   $manage_file_content = $monit::template ? {
     ''        => undef,
     default   => template($monit::template),
+  }
+
+  $manage_file_init_content = $monit::config_file_init_template? {
+    ''        => undef,
+    default   => template($monit::config_file_init_template),
   }
 
   ### Managed resources
@@ -358,6 +380,17 @@ class monit (
     replace => $monit::manage_file_replace,
     audit   => $monit::manage_audit,
     noop    => $monit::bool_noops,
+  }
+
+  file { "monit.init":
+    ensure  => $monit::manage_file,
+    path    => $monit::config_file_init,
+    mode    => $monit::config_file_mode,
+    owner   => $monit::config_file_owner,
+    group   => $monit::config_file_group,
+    require => Package[$monit::package],
+    content => $monit::manage_file_init_content,
+    notify  => $monit::manage_service_autorestart,
   }
 
   # The whole monit configuration directory can be recursively overriden
