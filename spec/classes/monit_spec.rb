@@ -45,6 +45,83 @@ START=yes
     it { should contain_file('monit.init').with_content(expected) }
   end
 
+  describe 'Test installation using template with default options' do
+    let(:facts) do
+      { 
+        :ipaddress => '10.42.42.42',
+        :operatinsystem => 'Debian',
+      }
+    end
+    let(:params) do
+      {
+        :template => 'monit/monit.conf.erb',
+      }
+    end
+    let(:expected) do
+"# This file is managed by Puppet. DO NOT EDIT.
+set daemon 120
+set logfile /var/log/monit/monit.log
+set idfile /var/monit/id
+set statefile /var/monit/state
+set eventqueue
+    basedir /var/monit/events
+    slots   100
+
+include /etc/monit.d/*
+
+"
+    end
+    it { should contain_file('monit.conf').with_ensure('present') }
+    it { should contain_file('monit.conf').with_content(expected) }
+  end
+
+  describe 'Test installation using template with all the options' do
+    let(:params) do
+      {
+        :template => 'monit/monit.conf.erb',
+        :plugins_dir => '/my/plugin/dir',
+        :id_file => '/my/id/file',
+        :state_file => '/my/state/file',
+        :events_file => '/my/events/file',
+        :events_count => '500',
+        :daemon_interval => '200',
+        :daemon_start_delay => '300',
+        :mmonit_url => 'http://some.url/dir',
+        :alert_rcpt => 'some@email.ex',
+        :alert_exceptions => ['no_this', 'nor_this'],
+        :web_interface_host => 'this.host',
+        :web_interface_port => '4000',
+        :web_interface_allow => ['localhost','user:password','@group'],
+        :mailserver => ['smtp.server.ex','another.smtp 2550']
+      }
+    end
+    let(:expected) do
+"# This file is managed by Puppet. DO NOT EDIT.
+set daemon 200
+    with start delay 300
+set logfile /var/log/monit/monit.log
+set idfile /my/id/file
+set statefile /my/state/file
+set mailserver smtp.server.ex,another.smtp 2550
+set eventqueue
+    basedir /my/events/file
+    slots   500
+set mmonit http://some.url/dir
+set alert some@email.ex not on { no_this,nor_this }
+set httpd port 4000 and
+    use address this.host
+    allow localhost
+    allow user:password
+    allow @group
+
+include /my/plugin/dir/*
+
+"
+    end
+    it { should contain_file('monit.conf').with_ensure('present') }
+    it { should contain_file('monit.conf').with_content(expected) }
+  end
+
   describe 'Test standard installation with monitoring and firewalling' do
     let(:params) { {:monitor => true , :firewall => true, :port => '42', :protocol => 'tcp' } }
     it { should contain_package('monit').with_ensure('present') }

@@ -4,6 +4,90 @@
 #
 #
 # == Parameters
+
+# [*daemon_interval*]
+#   Start Monit in the background (run as a daemon) and check services
+#   ant these intervals
+#   Default: 120 seconds
+#
+# [*daemon_start_delay*]
+#   optional: delay between monit start and the first check for services.
+#   Default: Monit check immediately after Monit start)
+#
+# [*id_file*]
+#   Set the location of the Monit id file which stores the unique id for the
+#   Monit instance. The id is generated and stored on first Monit start. By 
+#   Default: the file is placed in $HOME/.monit.id.
+#
+# [*state_file*]
+#   Set the location of the Monit state file which saves monitoring states
+#   on each cycle. If the state file is stored on a persistent filesystem,
+#   Monit will recover the monitoring state across reboots.
+#   If it is on temporary filesystem, the state will be lost on reboot which
+#   may be convenient in some situations.
+#   Default: the file is placed in $HOME/.monit.state.
+#
+# [*mailserver*]
+#   Set the list of mail servers for alert delivery. Multiple servers may be 
+#   specified using a comma separator. If the first mail server fails, Monit 
+#   will use the second mail server in the list and so on. By default Monit uses 
+#   port 25 - it is possible to override this with the PORT option.
+#   Example: localhost
+#            ['localhost 2525', 'otherserver', 'lastserver 1212']
+#   Default: empty
+#
+# [*events_file*]
+#   By default Monit will drop alert events if no mail servers are available. 
+#   If you want to keep the alerts for later delivery retry, you can use the 
+#   EVENTQUEUE statement. The base directory where undelivered alerts will be 
+#   stored is specified by the BASEDIR option. You can limit the maximal queue
+#   size using the SLOTS option (if omitted, the queue is limited by space 
+#   available in the back end filesystem).
+#   Default: operatingsystem dependent
+#
+# [*events_count*]
+#   Limit the events queue size
+#   Default: 100
+#
+# [*mmonit_url*]
+#   Send status and events to M/Monit (for more informations about M/Monit 
+#   see http://mmonit.com/). By default Monit registers credentials with 
+#   M/Monit so M/Monit can smoothly communicate back to Monit and you don't
+#   have to register Monit credentials manually in M/Monit. It is possible to
+#   disable credential registration using the commented out option below. 
+#   Though, if safety is a concern we recommend instead using https when
+#   communicating with M/Monit and send credentials encrypted.
+#   Default: empty
+#
+# [*alert_rcpt*]
+#   You can set alert recipients whom will receive alerts if/when a 
+#   service defined in this file has errors. Alerts may be restricted on 
+#   events by using a filter as in the second example below. 
+#   Default: empty
+#
+# [*alert_exceptions*]
+#   Do not alert when Monit start,stop or perform a user initiated action
+#   set alert manager@foo.bar not on { instance, action } 
+#   Default: empty
+#
+# [*web_interface_host*]
+#   Monit has an embedded web server which can be used to view status of 
+#   services monitored and manage services from a web interface. See the
+#   Monit Wiki if you want to enable SSL for the web server.
+#   Default: localhost
+#
+# [*web_interface_port*]
+#   Port for the web interface
+#   Default: 2812
+#
+# [*web_interface_allow*]
+#   Define who can access the admin interface
+#   Examples:
+#         localhost        # allow localhost to connect to the server and
+#         admin:monit      # require user 'admin' with password 'monit'
+#         @monit           # allow users of group 'monit' to connect (rw)
+#         @users readonly  # allow users of group 'users' to connect readonly
+#   Default: localhost
 #
 # [*plugins_dir*]
 #   Directory contaning single configuration snippets
@@ -193,10 +277,10 @@
 #   Path of application data directory. Used by puppi
 #
 # [*log_dir*]
-#   Base logs directory. Used by puppi
+#   Base logs directory. Used also by puppi
 #
 # [*log_file*]
-#   Log file(s). Used by puppi
+#   Log file(s). Used also by puppi
 #
 # [*port*]
 #   The listening port, if any, of the service.
@@ -215,6 +299,19 @@
 class monit (
   $plugins_dir               = params_lookup( 'plugins_dir' ),
   $my_class                  = params_lookup( 'my_class' ),
+  $daemon_interval           = params_lookup( 'daemon_interval' ),
+  $daemon_start_delay        = params_lookup( 'daemon_start_delay' ),
+  $mailserver                = params_lookup( 'mailserver' ),
+  $id_file                   = params_lookup( 'id_file' ),
+  $state_file                = params_lookup( 'state_file' ),
+  $events_file               = params_lookup( 'events_file' ),
+  $events_count              = params_lookup( 'events_count' ),
+  $mmonit_url                = params_lookup( 'mmonit_url' ),
+  $alert_rcpt                = params_lookup( 'alert_rcpt' ),
+  $alert_exceptions          = params_lookup( 'alert_exceptions' ),
+  $web_interface_host        = params_lookup( 'web_interface_host' ),
+  $web_interface_port        = params_lookup( 'web_interface_port' ),
+  $web_interface_allow       = params_lookup( 'web_interface_allow' ),
   $source                    = params_lookup( 'source' ),
   $source_dir                = params_lookup( 'source_dir' ),
   $source_dir_purge          = params_lookup( 'source_dir_purge' ),
@@ -324,6 +421,30 @@ class monit (
   $bool_start_at_boot = $monit::bool_disableboot ? {
     true    => 'no',
     default => 'yes',
+  }
+
+  $array_mailservers = is_array($mailserver) ? {
+    false     => $mailserver ? {
+      ''      => [],
+      default => [$mailserver],
+    },
+    default   => $mailserver,
+  }
+
+  $array_alert_exceptions = is_array($alert_exceptions) ? {
+    false     => $alert_exceptions ? {
+      ''      => [],
+      default => [$alert_exceptions],
+    },
+    default   => $alert_exceptions,
+  }
+
+  $array_web_interface_allow = is_array($web_interface_allow) ? {
+    false     => $web_interface_allow ? {
+      ''      => [],
+      default => [$web_interface_allow],
+    },
+    default   => $web_interface_allow,
   }
 
   $manage_audit = $monit::bool_audit_only ? {
