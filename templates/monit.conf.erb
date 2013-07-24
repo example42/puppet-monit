@@ -1,0 +1,42 @@
+# This file is managed by Puppet. DO NOT EDIT.
+<% if scope.lookupvar('monit::daemon_interval') -%>
+set daemon <%= scope.lookupvar('monit::daemon_interval') %>
+<% if scope.lookupvar('monit::daemon_start_delay') != '' -%>
+    with start delay <%= scope.lookupvar('monit::daemon_start_delay') %>
+<% end -%>
+<% end -%>
+<% if scope.lookupvar('monit::log_file') != '' -%>
+set logfile <%= scope.lookupvar('monit::log_file') %>
+<% end -%>
+<% if scope.lookupvar('monit::id_file') != '' -%>
+set idfile <%= scope.lookupvar('monit::id_file') %>
+<% end -%>
+<% if scope.lookupvar('monit::state_file') != '' -%>
+set statefile <%= scope.lookupvar('monit::state_file') %>
+<% end -%>
+<% if @array_mailservers != [] -%>
+set mailserver <%= @array_mailservers * ',' %>
+<% end -%>
+<% if scope.lookupvar('monit::events_file') != '' -%>
+set eventqueue
+    basedir <%= scope.lookupvar('monit::events_file') %>
+    slots   <%= scope.lookupvar('monit::events_count') %>
+<% end -%>
+<% if scope.lookupvar('monit::mmonit_url') != '' -%>
+set mmonit <%= scope.lookupvar('monit::mmonit_url') %>
+<% end -%>
+<% if scope.lookupvar('monit::alert_rcpt') != '' -%>
+set alert <%= scope.lookupvar('monit::alert_rcpt') %><% if @array_alert_exceptions != [] %> not on { <%= @array_alert_exceptions * ',' %> }<% end %>
+<% end -%>
+<% if scope.lookupvar('monit::web_interface_host') != '' -%>
+set httpd port <%= scope.lookupvar('monit::web_interface_port') %> and
+    use address <%= scope.lookupvar('monit::web_interface_host') %>
+<% if @array_web_interface_allow != [] -%>
+<% @array_web_interface_allow.each do |a| -%>
+    allow <%= a %>
+<% end -%>
+<% end -%>
+<% end -%>
+
+include <%= scope.lookupvar('monit::plugins_dir') %>/*
+

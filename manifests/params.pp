@@ -15,8 +15,43 @@
 class monit::params {
 
   $plugins_dir = $::operatingsystem ? {
-    default => '/etc/monit/conf.d',
+    /(?i:Debian|Ubuntu|Mint)/ => '/etc/monit/conf.d',
+    default                   => '/etc/monit.d',
   }
+
+  $id_file = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/ => '/var/lib/monit/id',
+    default                   => '/var/monit/id',
+  }
+
+  $state_file = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/ => '/var/lib/monit/state',
+    default                   => '/var/monit/state',
+  }
+
+  $events_file = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/ => '/var/lib/monit/events',
+    default                   => '/var/monit/events',
+  }
+
+  $daemon_interval = '120'
+  $daemon_start_delay = ''
+
+  $events_count = '100'
+
+  $mmonit_url = ''
+  $alert_rcpt = ''
+  $alert_exceptions = ''
+
+  $web_interface_host = ''
+  $web_interface_port = '2812'
+  $web_interface_allow = 'localhost'
+
+  # Mailserver/s monit will use to send messages. 
+  # Format: server port
+  # Can be an array of mailservers to be tried
+  # Format ['server1 port1',...,'serverN portN']
+  $mailserver = ''
 
   ### Application related parameters
 
@@ -49,7 +84,8 @@ class monit::params {
   }
 
   $config_file = $::operatingsystem ? {
-    default => '/etc/monit/monitrc',
+    /(?i:Debian|Ubuntu|Mint)/ => '/etc/monit/monitrc',
+    default                   => '/etc/monit.conf',
   }
 
   $config_file_mode = $::operatingsystem ? {
@@ -68,6 +104,8 @@ class monit::params {
     /(?i:Debian|Ubuntu|Mint)/ => '/etc/default/monit',
     default                   => '/etc/sysconfig/monit',
   }
+
+  $config_file_init_template = ''
 
   $pid_file = $::operatingsystem ? {
     default => '/var/run/monit.pid',
