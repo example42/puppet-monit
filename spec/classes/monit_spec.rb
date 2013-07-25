@@ -49,7 +49,7 @@ START=yes
     let(:facts) do
       { 
         :ipaddress => '10.42.42.42',
-        :operatinsystem => 'Debian',
+        :operatingsystem => 'Debian',
       }
     end
     let(:params) do
@@ -60,14 +60,14 @@ START=yes
     let(:expected) do
 "# This file is managed by Puppet. DO NOT EDIT.
 set daemon 120
-set logfile /var/log/monit/monit.log
-set idfile /var/monit/id
-set statefile /var/monit/state
+set logfile /var/log/monit.log
+set idfile /var/lib/monit/id
+set statefile /var/lib/monit/state
 set eventqueue
-    basedir /var/monit/events
+    basedir /var/lib/monit/events
     slots   100
 
-include /etc/monit.d/*
+include /etc/monit/conf.d/*
 
 "
     end
@@ -99,7 +99,6 @@ include /etc/monit.d/*
 "# This file is managed by Puppet. DO NOT EDIT.
 set daemon 200
     with start delay 300
-set logfile /var/log/monit/monit.log
 set idfile /my/id/file
 set statefile /my/state/file
 set mailserver smtp.server.ex,another.smtp 2550
