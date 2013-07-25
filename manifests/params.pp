@@ -116,11 +116,12 @@ class monit::params {
   }
 
   $log_dir = $::operatingsystem ? {
-    default => '/var/log/monit',
+    default => '/var/log',
   }
 
   $log_file = $::operatingsystem ? {
-    default => '/var/log/monit/monit.log',
+    /(?i:Debian|Ubuntu|Mint)/ => '/var/log/monit.log',
+    default                   => '',
   }
 
   $port = ''
