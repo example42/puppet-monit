@@ -151,7 +151,5 @@ class monit::params {
   $puppi = false
   $puppi_helper = 'standard'
   $debug = false
-  $audit_only = false
-  $noops = false
 
 }

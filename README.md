@@ -39,21 +39,9 @@ For detailed info about the logic and usage patterns of Example42 modules check 
           absent => true
         }
 
-* Enable auditing without without making changes on existing monit configuration *files*
-
-        class { 'monit':
-          audit_only => true
-        }
-
-* Module dry-run: Do not make any change on *all* the resources provided by the module
-
-        class { 'monit':
-          noops => true
-        }
-
 
 ## USAGE - Overrides and Customizations
-* Use custom sources for main config file 
+* Use custom sources for main config file
 
         class { 'monit':
           source => [ "puppet:///modules/example42/monit/monit.conf-${hostname}" , "puppet:///modules/example42/monit/monit.conf" ], 

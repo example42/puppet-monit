@@ -40,8 +40,6 @@ define monit::dotconf (
     notify  => $monit::manage_service_autorestart,
     content => template($template),
     replace => $monit::manage_file_replace,
-    audit   => $monit::manage_audit,
-    noop    => $monit::bool_noops,
   }
 
 }
