@@ -15,7 +15,7 @@ define monit::checkpid (
   $restarts     = '5',
   $cycles       = '5',
   $failaction   = 'timeout',
-  $enable       = 'true' ) {
+  $enable       = true ) {
 
   $ensure=bool2ensure($enable)
 
@@ -27,17 +27,17 @@ define monit::checkpid (
   }
 
   $real_pidfile = $pidfile ? {
-    ''      => "/var/run/$process.pid",
+    ''      => "/var/run/${process}.pid",
     default => $pidfile,
   }
 
   $real_startprogram = $startprogram ? {
-    ''      => "/etc/init.d/$process start",
+    ''      => "/etc/init.d/${process} start",
     default => $startprogram,
   }
 
   $real_stopprogram = $stopprogram ? {
-    ''      => "/etc/init.d/$process stop",
+    ''      => "/etc/init.d/${process} stop",
     default => $stopprogram,
   }
 
@@ -51,8 +51,6 @@ define monit::checkpid (
     notify  => $monit::manage_service_autorestart,
     content => template($template),
     replace => $monit::manage_file_replace,
-    audit   => $monit::manage_audit,
-    noop    => $monit::bool_noops,
   }
 
 }

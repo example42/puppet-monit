@@ -47,7 +47,7 @@ class monit::params {
   $web_interface_port = '2812'
   $web_interface_allow = 'localhost'
 
-  # Mailserver/s monit will use to send messages. 
+  # Mailserver/s monit will use to send messages.
   # Format: server port
   # Can be an array of mailservers to be tried
   # Format ['server1 port1',...,'serverN portN']
