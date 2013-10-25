@@ -28,7 +28,7 @@ define monit::checkurl (
   }
 
   $real_url = $url ? {
-    ''      => "htpp://${real_fqdn}",
+    ''      => "http://${real_fqdn}",
     default => $url,
   }
 
