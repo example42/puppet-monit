@@ -22,8 +22,8 @@ define monit::checkpid (
   include monit
 
   $real_process = $process ? {
-    ''      => $process,
-    default => $name,
+    ''      => $name,
+    default => $process,
   }
 
   $real_pidfile = $pidfile ? {
