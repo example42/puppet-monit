@@ -28,12 +28,14 @@ set mmonit <%= scope.lookupvar('monit::mmonit_url') %>
 <% if scope.lookupvar('monit::alert_rcpt') != '' -%>
 set alert <%= scope.lookupvar('monit::alert_rcpt') %><% if @array_alert_exceptions != [] %> not on { <%= @array_alert_exceptions * ',' %> }<% end %>
 <% end -%>
-<% if scope.lookupvar('monit::web_interface_host') != '' -%>
+<% if scope.lookupvar('monit::web_interface_port') != '' -%>
 set httpd port <%= scope.lookupvar('monit::web_interface_port') %> and
-    use address <%= scope.lookupvar('monit::web_interface_host') %>
+<% if scope.lookupvar('monit::web_interface_host') != '' -%>
+use address <%= scope.lookupvar('monit::web_interface_host') %> 
+<% end -%>
 <% if @array_web_interface_allow != [] -%>
 <% @array_web_interface_allow.each do |a| -%>
-    allow <%= a %>
+allow <%= a %>
 <% end -%>
 <% end -%>
 <% end -%>
