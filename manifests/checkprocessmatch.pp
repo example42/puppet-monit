@@ -9,7 +9,7 @@
 #
 define monit::checkprocessmatch (
   $process      = '',
-  $template     = 'monit/checkprocess.erb',
+  $template     = 'monit/checkprocessmatch.erb',
   $pattern      = '',
   $startprogram = '',
   $stopprogram  = '',
@@ -27,9 +27,7 @@ define monit::checkprocessmatch (
     default => $process,
   }
 
-  $check_type = 'matching'
-
-  $check_argument = $pattern ? {
+  $real_pattern = $pattern ? {
     ''      => $real_process,
     default => $pattern,
   }

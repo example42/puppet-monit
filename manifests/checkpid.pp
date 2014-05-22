@@ -8,7 +8,7 @@
 #
 define monit::checkpid (
   $process      = '',
-  $template     = 'monit/checkprocess.erb',
+  $template     = 'monit/checkpid.erb',
   $pidfile      = '',
   $startprogram = '',
   $stopprogram  = '',
@@ -26,9 +26,7 @@ define monit::checkpid (
     default => $process,
   }
 
-  $check_type = 'pidfile'
-
-  $check_argument = $pidfile ? {
+  $real_pidfile = $pidfile ? {
     ''      => "/var/run/${process}.pid",
     default => $pidfile,
   }
