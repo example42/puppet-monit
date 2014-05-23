@@ -1,6 +1,6 @@
 ## This file is managed by Puppet
 
-check process <%= @real_process %> with pidfile "<%= @real_pidfile %>"
+check process <%= @real_process %> matching "<%= @real_pattern %>"
     start program  "<%= @real_startprogram %>"
     stop program  "<%= @real_stopprogram %>"
     if <%= @restarts %> restarts within <%= @cycles %> cycles then <%= @failaction %>
