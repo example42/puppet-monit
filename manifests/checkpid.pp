@@ -15,6 +15,8 @@ define monit::checkpid (
   $restarts     = '5',
   $cycles       = '5',
   $failaction   = 'timeout',
+  $processuid   = '',
+  $processgid   = '',
   $enable       = true ) {
 
   $ensure=bool2ensure($enable)
@@ -39,6 +41,16 @@ define monit::checkpid (
   $real_stopprogram = $stopprogram ? {
     ''      => "/etc/init.d/${process} stop",
     default => $stopprogram,
+  }
+
+  $real_processuid = $processuid ? {
+    ''      => 'root',
+    default => $processuid,
+  }
+
+  $real_processgid = $processgid ? {
+    ''      => 'root',
+    default => $processgid,
   }
 
   file { "MonitCheckPid_${name}":
