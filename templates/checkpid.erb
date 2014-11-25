@@ -4,3 +4,4 @@ check process <%= @real_process %> with pidfile "<%= @real_pidfile %>"
     start program  "<%= @real_startprogram %>"
     stop program  "<%= @real_stopprogram %>"
     if <%= @restarts %> restarts within <%= @cycles %> cycles then <%= @failaction %>
+    as uid <%= @real_processuid %> and gid <%= @real_processgid %>
