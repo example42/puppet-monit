@@ -42,6 +42,16 @@ define monit::checkprocessmatch (
     default => $stopprogram,
   }
 
+  $real_processuid = $processuid ? {
+    ''      => 'root',
+    default => $processuid,
+  }
+
+  $real_processgid = $processgid ? {
+    ''      => 'root',
+    default => $processgid,
+  }
+
   file { "MonitCheckProcessMatch_${name}":
     ensure  => $ensure,
     path    => "${monit::plugins_dir}/${name}",
