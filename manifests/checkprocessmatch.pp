@@ -43,12 +43,12 @@ define monit::checkprocessmatch (
   }
 
   $real_processuid = $processuid ? {
-    ''      => 'root',
+    ''      => $monit::process_user,
     default => $processuid,
   }
 
   $real_processgid = $processgid ? {
-    ''      => 'root',
+    ''      => $monit::process_group,
     default => $processgid,
   }
 
