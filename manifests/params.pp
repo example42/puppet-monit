@@ -79,6 +79,9 @@ class monit::params {
     default => 'monit',
   }
 
+  $process_group = $::operatingsystem ? {
+    default => 'monit',
+
   $config_dir = $::operatingsystem ? {
     default => '/etc/monit',
   }
