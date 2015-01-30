@@ -9,6 +9,8 @@
 #
 define monit::checkprocessmatch (
   $process      = '',
+  $processuid   = '',
+  $processgid   = '',
   $template     = 'monit/checkprocessmatch.erb',
   $pattern      = '',
   $startprogram = '',

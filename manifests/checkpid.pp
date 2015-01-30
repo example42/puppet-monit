@@ -8,6 +8,8 @@
 #
 define monit::checkpid (
   $process      = '',
+  $processuid   = '',
+  $processgid   = '',
   $template     = 'monit/checkpid.erb',
   $pidfile      = '',
   $startprogram = '',
