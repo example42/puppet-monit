@@ -1,39 +1,37 @@
-# Define: monit::checkpid
+# Define: monit::checkfile
 #
-# Basic PID service checking define
+# Basic file checking define that works by pattern matching
 #
 # Usage:
 # With standard template:
-# monit::checkpid  { "name": }
+# monit::checkfile { "name": 
+#  pattern =>  'string to search'}
 #
-define monit::checkpid (
+define monit::checkfile (
   $process      = '',
   $processuid   = '',
   $processgid   = '',
-  $template     = 'monit/checkpid.erb',
-  $pidfile      = '',
+  $file         = '',
+  $template     = 'monit/checkfile.erb',
+  $pattern      = '',
   $startprogram = '',
   $stopprogram  = '',
   $restarts     = '5',
   $cycles       = '5',
   $failaction   = 'timeout',
-  $processuid   = '',
-  $processgid   = '',
   $enable       = true ) {
 
   $ensure=bool2ensure($enable)
 
   include monit
 
-  $real_process = $process ? {
+  $real_file = $file ? {
     ''      => $name,
-    default => $process,
+    default => $file,
   }
 
-  $real_pidfile = $pidfile ? {
-    ''      => "/var/run/${process}.pid",
-    default => $pidfile,
-  }
+  $real_pattern = $pattern
+  $real_process = $process
 
   $real_startprogram = $startprogram ? {
     ''      => "/etc/init.d/${process} start",
@@ -55,7 +53,7 @@ define monit::checkpid (
     default => $processgid,
   }
 
-  file { "MonitCheckPid_${name}":
+  file { "MonitCheckFile_${name}":
     ensure  => $ensure,
     path    => "${monit::plugins_dir}/${name}",
     mode    => $monit::config_file_mode,
