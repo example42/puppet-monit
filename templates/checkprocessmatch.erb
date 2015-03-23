@@ -1,7 +1,6 @@
 ## This file is managed by Puppet
 
 check process <%= @real_process %> matching "<%= @real_pattern %>"
-    start program  "<%= @real_startprogram %>"
-    stop program  "<%= @real_stopprogram %>"
-    as uid <%= @real_processuid %> and gid <%= @real_processgid %>
+    start program  "<%= @real_startprogram %>" as uid <%= @real_processuid %> and gid <%= @real_processgid %>
+    stop program  "<%= @real_stopprogram %>" as uid <%= @real_processuid %> and gid <%= @real_processgid %>
     if <%= @restarts %> restarts within <%= @cycles %> cycles then <%= @failaction %>
