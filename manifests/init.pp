@@ -459,12 +459,12 @@ class monit (
   }
 
   service { 'monit':
-    ensure     => $monit::manage_service_ensure,
-    name       => $monit::service,
-    enable     => $monit::manage_service_enable,
-    hasstatus  => $monit::service_status,
-    pattern    => $monit::process,
-    require    => Package[$monit::package],
+    ensure    => $monit::manage_service_ensure,
+    name      => $monit::service,
+    enable    => $monit::manage_service_enable,
+    hasstatus => $monit::service_status,
+    pattern   => $monit::process,
+    require   => Package[$monit::package],
   }
 
   file { 'monit.conf':
