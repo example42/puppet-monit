@@ -17,8 +17,7 @@ define monit::checkpid (
   $restarts     = '5',
   $cycles       = '5',
   $failaction   = 'timeout',
-  $processuid   = '',
-  $processgid   = '',
+  $depends      = [],
   $enable       = true ) {
 
   $ensure=bool2ensure($enable)

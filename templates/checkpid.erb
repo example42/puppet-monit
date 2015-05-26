@@ -4,3 +4,6 @@ check process <%= @real_process %> with pidfile "<%= @real_pidfile %>"
     start program  "<%= @real_startprogram %>" as uid <%= @real_processuid %> and gid <%= @real_processgid %>
     stop program  "<%= @real_stopprogram %>" as uid <%= @real_processuid %> and gid <%= @real_processgid %>
     if <%= @restarts %> restarts within <%= @cycles %> cycles then <%= @failaction %>
+    <%- [@depends].flatten.each do |singledepend| -%>
+    depends on <%= singledepend %>
+    <%- end -%>

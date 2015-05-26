@@ -4,7 +4,7 @@
 #
 # Usage:
 # With standard template:
-# monit::checkfile { "name": 
+# monit::checkfile { "name":
 #  pattern =>  'string to search'}
 #
 define monit::checkfile (
@@ -19,6 +19,7 @@ define monit::checkfile (
   $restarts     = '5',
   $cycles       = '5',
   $failaction   = 'timeout',
+  $depends      = [],
   $enable       = true ) {
 
   $ensure=bool2ensure($enable)

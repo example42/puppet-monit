@@ -5,3 +5,6 @@ check file <%= @real_process %>_file with path <%= @real_file %>
     stop program  "<%= @real_stopprogram %>" as uid <%= @real_processuid %> and gid <%= @real_processgid %>
     if match "<%= @real_pattern %>" then restart
     if <%= @restarts %> restarts within <%= @cycles %> cycles then <%= @failaction %>
+    <%- [@depends].flatten.each do |singledepend| -%>
+    depends on <%= singledepend %>
+    <%- end -%>

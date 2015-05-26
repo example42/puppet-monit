@@ -18,6 +18,7 @@ define monit::checkprocessmatch (
   $restarts     = '5',
   $cycles       = '5',
   $failaction   = 'timeout',
+  $depends      = [],
   $enable       = true ) {
 
   $ensure=bool2ensure($enable)
