@@ -10,7 +10,7 @@ env:
   - PUPPET_VERSION="~> 3.1.0"
 
 gemfile: .gemfile
-sudo:false
+sudo: false
 notifications:
   email:
     - al@lab42.it
