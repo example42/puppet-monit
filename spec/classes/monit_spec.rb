@@ -4,7 +4,10 @@ describe 'monit' do
 
   let(:title) { 'monit' }
   let(:node) { 'rspec.example42.com' }
-  let(:facts) { { :ipaddress => '10.42.42.42' } }
+  let(:facts) { {
+      :ipaddress => '10.42.42.42',
+      :concat_basedir => '/dne'
+  } }
 
   describe 'Test standard installation' do
     it { should contain_package('monit').with_ensure('present') }
@@ -198,12 +201,10 @@ include /my/plugin/dir/*
   describe 'Test customizations - template' do
     let(:params) { {:template => "monit/spec.erb" , :options => { 'opt_a' => 'value_a' } } }
     it 'should generate a valid template' do
-      content = catalogue.resource('file', 'monit.conf').send(:parameters)[:content]
-      content.should match "fqdn: rspec.example42.com"
+      should contain_file('monit.conf').with_content(/fqdn: rspec.example42.com/)
     end
     it 'should generate a template that uses custom options' do
-      content = catalogue.resource('file', 'monit.conf').send(:parameters)[:content]
-      content.should match "value_a"
+      should contain_file('monit.conf').with_content(/value_a/)
     end
   end
 
@@ -227,8 +228,7 @@ include /my/plugin/dir/*
   describe 'Test service autorestart' do
     let(:params) { {:service_autorestart => "no" } }
     it 'should not automatically restart the service, when service_autorestart => false' do
-      content = catalogue.resource('file', 'monit.conf').send(:parameters)[:notify]
-      content.should be_nil
+      should contain_file('monit.conf').with_notify(nil)
     end
   end
 
