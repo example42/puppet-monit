@@ -493,7 +493,7 @@ class monit (
   }
 
   # The whole monit configuration directory can be recursively overriden
-  if $monit::source_dir {
+  if $monit::source_dir and $monit::source_dir != '' {
     file { 'monit.dir':
       ensure  => directory,
       path    => $monit::config_dir,
