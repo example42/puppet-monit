@@ -508,7 +508,7 @@ class monit (
 
 
   ### Include custom class if $my_class is set
-  if $monit::my_class {
+  if $monit::my_class and $monit::my_class != '' {
     include $monit::my_class
   }
 
